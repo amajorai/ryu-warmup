@@ -1,0 +1,205 @@
+/* Self-contained Tailwind v4 entry for the Warmup companion app.
+ *
+ * The sandboxed frame runs under CSP `connect-src 'none'`, so the CSS must be
+ * compiled at build time and inlined (no runtime fetch). We deliberately do NOT
+ * `@import "@ryu/ui/globals.css"` — that file carries repo-wide `@source` globs
+ * (`apps/**`, `packages/ui/**`) + extra deps (tw-animate-css, shadcn) that would
+ * scan the whole monorepo and fight the single-file build. Instead this entry:
+ *   1. pulls in Tailwind and scans ONLY this package's own `src`,
+ *   2. ALSO scans the specific `@ryu/ui` component source files this page imports
+ *      (button/badge/dialog/input/label/native-select/switch/spinner/toggle/
+ *      tooltip/empty) so their `cva`/className utilities survive tree-shaking into
+ *      the single-file bundle (the W7 UI-layer amendment: use `@ryu/ui` as a
+ *      build-time dep, not a hand-rolled copy),
+ *   3. carries a SELF-CONTAINED copy of the design-system semantic-color token
+ *      block (:root + .dark + the `@theme inline` color mapping) so every
+ *      `bg-primary` / `text-muted-foreground` / `bg-card` / `border-border` class
+ *      the ported page uses resolves to the same value the desktop shows.
+ *
+ * At MOUNT the host also injects a `:root{…}` override carrying its live resolved
+ * token values (the theme-token bridge in packages/app-host) so the frame renders
+ * in the host's active light/dark theme; this block is the offline/parity default.
+ *
+ * Keep the token values in sync with `packages/ui/src/styles/globals.css` if the
+ * design system changes them.
+ */
+@import "tailwindcss";
+@source "./";
+@source "../../../../packages/ui/src/components/badge.tsx";
+@source "../../../../packages/ui/src/components/button.tsx";
+@source "../../../../packages/ui/src/components/empty.tsx";
+@source "../../../../packages/ui/src/components/input.tsx";
+@source "../../../../packages/ui/src/components/label.tsx";
+@source "../../../../packages/ui/src/components/native-select.tsx";
+@source "../../../../packages/ui/src/components/spinner.tsx";
+@source "../../../../packages/ui/src/components/switch.tsx";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+	--card: oklch(1 0 0);
+	--card-foreground: oklch(0.145 0 0);
+	--popover: var(--muted);
+	--popover-foreground: var(--foreground);
+	--primary: oklch(0.205 0 0);
+	--primary-foreground: oklch(0.985 0 0);
+	--secondary: oklch(0.97 0 0);
+	--secondary-foreground: oklch(0.205 0 0);
+	--muted: oklch(0.97 0 0);
+	--muted-foreground: oklch(0.556 0 0);
+	--accent: oklch(0.97 0 0);
+	--accent-foreground: oklch(0.205 0 0);
+	--destructive: oklch(0.577 0.245 27.325);
+	--success: oklch(0.62 0.17 145);
+	--success-foreground: oklch(0.985 0 0);
+	--warning: oklch(0.75 0.16 75);
+	--warning-foreground: oklch(0.205 0 0);
+	--info: oklch(0.55 0.2 255);
+	--info-foreground: oklch(0.985 0 0);
+	--border: oklch(0.922 0 0);
+	--input: oklch(0.922 0 0);
+	--ring: oklch(0.708 0 0);
+	--radius: 0.625rem;
+	--background: oklch(1 0 0);
+	--foreground: oklch(0.145 0 0);
+	--spacing: 0.25rem;
+}
+
+.dark {
+	--background: oklch(0.145 0 0);
+	--foreground: oklch(0.985 0 0);
+	--card: oklch(0.205 0 0);
+	--card-foreground: oklch(0.985 0 0);
+	--primary: oklch(0.922 0 0);
+	--primary-foreground: oklch(0.205 0 0);
+	--secondary: oklch(0.269 0 0);
+	--secondary-foreground: oklch(0.985 0 0);
+	--muted: oklch(0.269 0 0);
+	--muted-foreground: oklch(0.708 0 0);
+	--accent: oklch(0.269 0 0);
+	--accent-foreground: oklch(0.985 0 0);
+	--destructive: oklch(0.704 0.191 22.216);
+	--success: oklch(0.7 0.15 150);
+	--success-foreground: oklch(0.985 0 0);
+	--warning: oklch(0.8 0.15 80);
+	--warning-foreground: oklch(0.205 0 0);
+	--info: oklch(0.65 0.17 255);
+	--info-foreground: oklch(0.985 0 0);
+	--border: oklch(1 0 0 / 10%);
+	--input: oklch(1 0 0 / 15%);
+	--ring: oklch(0.556 0 0);
+}
+
+@theme inline {
+	--color-ring: var(--ring);
+	--color-input: var(--input);
+	--color-border: var(--border);
+	--color-destructive: var(--destructive);
+	--color-success: var(--success);
+	--color-success-foreground: var(--success-foreground);
+	--color-warning: var(--warning);
+	--color-warning-foreground: var(--warning-foreground);
+	--color-info: var(--info);
+	--color-info-foreground: var(--info-foreground);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-accent: var(--accent);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-muted: var(--muted);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-secondary: var(--secondary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-primary: var(--primary);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-popover: var(--popover);
+	--color-card-foreground: var(--card-foreground);
+	--color-card: var(--card);
+	--color-foreground: var(--foreground);
+	--color-background: var(--background);
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+}
+
+html,
+body,
+#ryu-plugin-root {
+	height: 100%;
+	margin: 0;
+}
+
+body {
+	font-family:
+		ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	font-size: 14px;
+	color: var(--foreground);
+	background: var(--background);
+}
+
+* {
+	border-color: var(--border);
+}
+
+/* The desktop page uses `scroll-fade-effect-y` (a repo-wide utility that fades the
+ * top/bottom edges of a scroll area as it scrolls). It lives in the desktop shell
+ * globals (`apps/desktop/src/index.css`) we do NOT import, so the `@property` decls,
+ * keyframes, and `@utility` are copied here VERBATIM to preserve the ported view's
+ * exact look. */
+@property --top-mask-height {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --bottom-mask-height {
+	syntax: "<length>";
+	inherits: true;
+	/* 0 when the scroll timeline is inactive (content fits — no overflow),
+	   matching --top-mask-height. An initial 48px left non-scrolling panes
+	   permanently faded at the bottom; callers then papered over it with
+	   pb-12 hacks. The `from` keyframe below re-applies the mask once the
+	   timeline is active and you're not yet at the bottom. */
+	initial-value: 0px;
+}
+
+@keyframes show-top-mask {
+	to {
+		--top-mask-height: var(--mask-height);
+	}
+}
+
+@keyframes hide-bottom-mask {
+	from {
+		--bottom-mask-height: var(--mask-height);
+	}
+	to {
+		--bottom-mask-height: 0px;
+	}
+}
+
+@utility scroll-fade-effect-y {
+	--mask-height: 48px;
+	--scroll-buffer: 2rem;
+
+	mask-image:
+		linear-gradient(to top, transparent, black 90%),
+		linear-gradient(to bottom, transparent 0%, black 100%),
+		linear-gradient(black, black);
+	mask-size:
+		100% var(--top-mask-height),
+		100% var(--bottom-mask-height),
+		100% 100%;
+	mask-repeat: no-repeat, no-repeat, no-repeat;
+	mask-position:
+		0 0,
+		0 100%,
+		0 0;
+	mask-composite: exclude;
+
+	animation-name: show-top-mask, hide-bottom-mask;
+	animation-timeline: scroll(self), scroll(self);
+	animation-range:
+		0 var(--scroll-buffer),
+		calc(100% - var(--scroll-buffer)) 100%;
+	animation-fill-mode: both, both;
+}
